@@ -1,21 +1,12 @@
 {
   "name": "sofifa-web-scraper",
-  "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
-  "scripts": {
-    "full": "node main.js full",
-    "test": "node main.js test",
-    "download-urls":  "node main.js download-urls"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/prashantghimire/sofifa-web-scraper.git"
-  },
-  "private": true,
   "dependencies": {
-    "cheerio": "^1.0.0-rc.12",
-    "date-format": "^4.0.14",
-    "humanoid-js": "^1.0.1"
+    "mysql2": "^3.6.0"
+  },
+  "scripts": {
+    "test": "node test.js",
+    "download-urls": "node download-urls.js",
+    "full": "node full.js",
+    "upload-db": "node scripts/upload-to-mysql.js"
   }
 }
