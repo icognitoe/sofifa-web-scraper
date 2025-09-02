@@ -19,15 +19,18 @@ jobs:
         with:
           node-version: '18'
           
-      - name: Install dependencies
+      - name: Remove package-lock.json to avoid conflicts
+        run: rm -f package-lock.json
+          
+      - name: Install all dependencies fresh
         run: |
           npm install
           npm install mysql2
           
-      - name: Install MySQL client
+      - name: Verify installation
         run: |
-          sudo apt-get update
-          sudo apt-get install -y mysql-client
+          echo "Checking installed packages..."
+          npm list mysql2
           
       - name: Run scraper and store to database
         env:
@@ -37,5 +40,7 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
         run: |
+          echo "Starting scraper..."
           npm run full
+          echo "Scraper completed, uploading to database..."
           node scripts/upload-to-mysql.js
