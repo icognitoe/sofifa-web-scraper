@@ -1,14 +1,14 @@
-name: Scrape Sofifa to Database
+name: Scrape Sofifa to Database (Simple)
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # Daily at 2 AM
-  workflow_dispatch:     # Manual trigger
+    - cron: '0 2 * * *'  
+  workflow_dispatch:     
 
 jobs:
   scrape-and-store:
     runs-on: ubuntu-latest
-    timeout-minutes: 360  # 6 hours for 18k players
+    timeout-minutes: 360  
     
     steps:
       - name: Checkout repository
@@ -19,20 +19,17 @@ jobs:
         with:
           node-version: '18'
           
-      - name: Remove package-lock.json to avoid conflicts
-        run: rm -f package-lock.json
-          
-      - name: Install all dependencies fresh
+      - name: Initialize fresh npm project
         run: |
-          npm install
+          npm init -y
           npm install mysql2
           
-      - name: Verify installation
+      - name: Run original scraper
         run: |
-          echo "Checking installed packages..."
-          npm list mysql2
+          echo "Running original scraper..."
+          node full.js
           
-      - name: Run scraper and store to database
+      - name: Upload to database
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_PORT: ${{ secrets.DB_PORT }}
@@ -40,7 +37,5 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
         run: |
-          echo "Starting scraper..."
-          npm run full
-          echo "Scraper completed, uploading to database..."
+          echo "Uploading to database..."
           node scripts/upload-to-mysql.js
